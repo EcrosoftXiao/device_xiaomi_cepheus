@@ -9,7 +9,7 @@ persist.vendor.audio.fluence.speaker=true
 persist.vendor.audio.fluence.tmic.enabled=false
 persist.vendor.audio.fluence.voicecall=true
 persist.vendor.audio.fluence.voicecomm=true
-persist.vendor.audio.fluence.voicerec=true
+persist.vendor.audio.fluence.voicerec=false
 persist.vendor.audio.ras.enabled=false
 persist.vendor.audio.voicecall.speaker.stereo=true
 persist.vendor.audio_hal.dsp_bit_width_enforce_mode=24
@@ -140,7 +140,7 @@ debug.sf.disable_backpressure=1
 debug.sf.enable_egl_image_tracker=1
 debug.sf.enable_hwc_vds=1
 debug.sf.hw=1
-debug.sf.latch_unsignaled=1
+debug.sf.latch_unsignaled=0
 ro.gfx.driver.1=com.qualcomm.qti.gpudrivers.msmnile.api30
 ro.hardware.egl=adreno
 ro.hardware.vulkan=adreno
@@ -181,10 +181,13 @@ persist.dbg.wfc_avail_ovr=1
 ro.vendor.qti.va_aosp.support=1
 ro.vendor.qti.va_odm.support=1
 
-#Media
+# Media
 media.settings.xml=/vendor/etc/media_profiles_vendor.xml
 debug.stagefright.ccodec=1
 debug.stagefright.omx_default_rank=0
+
+# Perf
+ro.vendor.perf.scroll_opt=true
 
 # Property to enable/disable PASR
 vendor.power.pasr.enabled=true

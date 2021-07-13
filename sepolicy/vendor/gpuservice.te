@@ -1,0 +1,3 @@
+allow gpuservice graphics_config_prop:file read;
+
+get_prop(gpuservice, graphics_config_prop)

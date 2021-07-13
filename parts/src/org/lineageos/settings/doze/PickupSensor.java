@@ -26,7 +26,6 @@ import android.os.PowerManager;
 import android.os.PowerManager.WakeLock;
 import android.os.SystemClock;
 import android.util.Log;
-
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 import java.util.concurrent.Future;
@@ -36,22 +35,27 @@ public class PickupSensor implements SensorEventListener {
     private static final String TAG = "PickupSensor";
 
     private static final int MIN_PULSE_INTERVAL_MS = 2500;
+    private static final int MIN_WAKEUP_INTERVAL_MS = 1000;
     private static final int WAKELOCK_TIMEOUT_MS = 300;
 
+    private PowerManager mPowerManager;
     private SensorManager mSensorManager;
     private Sensor mSensor;
+    private WakeLock mWakeLock;
     private Context mContext;
     private ExecutorService mExecutorService;
-    private PowerManager mPowerManager;
-    private WakeLock mWakeLock;
+
+    private Sensor mProximitySensor;
+    private boolean mInsidePocket = false;
 
     private long mEntryTimestamp;
 
     public PickupSensor(Context context) {
         mContext = context;
+        mPowerManager = mContext.getSystemService(PowerManager.class);
         mSensorManager = mContext.getSystemService(SensorManager.class);
         mSensor = DozeUtils.getSensor(mSensorManager, "xiaomi.sensor.pickup");
-        mPowerManager = (PowerManager) mContext.getSystemService(Context.POWER_SERVICE);
+        mProximitySensor = mSensorManager.getDefaultSensor(Sensor.TYPE_PROXIMITY, false);
         mWakeLock = mPowerManager.newWakeLock(PowerManager.PARTIAL_WAKE_LOCK, TAG);
         mExecutorService = Executors.newSingleThreadExecutor();
     }
@@ -60,23 +64,26 @@ public class PickupSensor implements SensorEventListener {
 
     @Override
     public void onSensorChanged(SensorEvent event) {
-        boolean isRaiseToWake = DozeUtils.isRaiseToWakeEnabled(mContext);
-
+        boolean isPickUpSetToWake = DozeUtils.isPickUpSetToWake(mContext);
         if (DEBUG)
             Log.d(TAG, "Got sensor event: " + event.values[0]);
 
         long delta = SystemClock.elapsedRealtime() - mEntryTimestamp;
-        if (delta < MIN_PULSE_INTERVAL_MS) {
+        if (delta < (isPickUpSetToWake ? MIN_WAKEUP_INTERVAL_MS : MIN_PULSE_INTERVAL_MS)) {
             return;
         }
 
         mEntryTimestamp = SystemClock.elapsedRealtime();
 
-        if (event.values[0] == 1) {
-            if (isRaiseToWake) {
+        if (!isPickUpSetToWake && !DozeUtils.isPocketGestureEnabled(mContext)) {
+            mInsidePocket = false;
+        }
+
+        if (event.values[0] == 1 && !mInsidePocket) {
+            if (isPickUpSetToWake) {
                 mWakeLock.acquire(WAKELOCK_TIMEOUT_MS);
-                mPowerManager.wakeUp(SystemClock.uptimeMillis(),
-                    PowerManager.WAKE_REASON_GESTURE, TAG);
+                mPowerManager.wakeUpWithProximityCheck(SystemClock.uptimeMillis(),
+                        PowerManager.WAKE_REASON_GESTURE, TAG);
             } else {
                 DozeUtils.launchDozePulse(mContext);
             }
@@ -88,11 +95,27 @@ public class PickupSensor implements SensorEventListener {
         /* Empty */
     }
 
+    private SensorEventListener mProximityListener = new SensorEventListener() {
+        @Override
+        public void onSensorChanged(SensorEvent event) {
+            mInsidePocket = event.values[0] < mProximitySensor.getMaximumRange();
+        }
+
+        @Override
+        public void onAccuracyChanged(Sensor sensor, int accuracy) {
+            // stub
+        }
+    };
+
     protected void enable() {
         if (DEBUG)
             Log.d(TAG, "Enabling");
         submit(() -> {
             mSensorManager.registerListener(this, mSensor, SensorManager.SENSOR_DELAY_NORMAL);
+            if (DozeUtils.isPickUpSetToWake(mContext)) {
+                mSensorManager.registerListener(mProximityListener, mProximitySensor,
+                        SensorManager.SENSOR_DELAY_NORMAL);
+            }
             mEntryTimestamp = SystemClock.elapsedRealtime();
         });
     }
@@ -100,6 +123,10 @@ public class PickupSensor implements SensorEventListener {
     protected void disable() {
         if (DEBUG)
             Log.d(TAG, "Disabling");
-        submit(() -> { mSensorManager.unregisterListener(this, mSensor); });
+        submit(() -> { mSensorManager.unregisterListener(this, mSensor);
+            if (DozeUtils.isPickUpSetToWake(mContext)) {
+                mSensorManager.unregisterListener(mProximityListener, mProximitySensor);
+            }
+        });
     }
 }

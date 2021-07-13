@@ -25,14 +25,13 @@ $(call inherit-product, frameworks/native/build/phone-xhdpi-6144-dalvik-heap.mk)
 
 # Call the proprietary setup
 $(call inherit-product, vendor/xiaomi/cepheus/cepheus-vendor.mk)
+$(call inherit-product, $(SRC_TARGET_DIR)/product/updatable_apex.mk)
+
+include build/make/target/product/iorap_large_memory_config.mk
 
 # Additional native libraries
 PRODUCT_COPY_FILES += \
     $(LOCAL_PATH)/configs/public.libraries.txt:$(TARGET_COPY_OUT_VENDOR)/etc/public.libraries.txt
-
-# AID/fs configs
-PRODUCT_PACKAGES += \
-    fs_config_files
 
 # ANT+
 PRODUCT_PACKAGES += \
@@ -45,7 +44,9 @@ PRODUCT_PACKAGES += \
     android.hardware.audio@6.0-impl \
     android.hardware.audio.effect@6.0-impl \
     android.hardware.audio.service \
-    android.hardware.bluetooth.audio@2.0-impl
+    android.hardware.bluetooth.audio@2.0-impl \
+    android.hardware.soundtrigger@2.2-impl \
+    android.hardware.soundtrigger@2.3-impl
 
 PRODUCT_PACKAGES += \
     audio.a2dp.default \
@@ -64,28 +65,14 @@ PRODUCT_PACKAGES += \
     libaudio-resampler
 
 PRODUCT_COPY_FILES += \
-    $(LOCAL_PATH)/configs/audio/audio_configs.xml:$(TARGET_COPY_OUT_VENDOR)/etc/audio_configs.xml \
-    $(LOCAL_PATH)/configs/audio/audio_effects.xml:$(TARGET_COPY_OUT_VENDOR)/etc/audio_effects.xml \
     $(LOCAL_PATH)/configs/audio/audio_io_policy.conf:$(TARGET_COPY_OUT_VENDOR)/etc/audio_io_policy.conf \
     $(LOCAL_PATH)/configs/audio/audio_platform_info.xml:$(TARGET_COPY_OUT_VENDOR)/etc/audio_platform_info.xml \
     $(LOCAL_PATH)/configs/audio/audio_policy_configuration.xml:$(TARGET_COPY_OUT_VENDOR)/etc/audio_policy_configuration.xml \
-    $(LOCAL_PATH)/configs/audio/mixer_paths_overlay_dynamic.xml:$(TARGET_COPY_OUT_VENDOR)/etc/mixer_paths_overlay_dynamic.xml \
-    $(LOCAL_PATH)/configs/audio/mixer_paths_overlay_static.xml:$(TARGET_COPY_OUT_VENDOR)/etc/mixer_paths_overlay_static.xml \
-    $(LOCAL_PATH)/configs/audio/mixer_paths_tavil.xml:$(TARGET_COPY_OUT_VENDOR)/etc/mixer_paths_tavil.xml
-
-PRODUCT_COPY_FILES += \
-    hardware/qcom-caf/sm8150/audio/configs/msmnile/audio_configs_stock.xml:$(TARGET_COPY_OUT_VENDOR)/etc/audio_configs_stock.xml \
-    hardware/qcom-caf/sm8150/audio/configs/msmnile/audio_tuning_mixer_tavil.txt:$(TARGET_COPY_OUT_VENDOR)/etc/audio_tuning_mixer_tavil.txt \
-    hardware/qcom-caf/sm8150/audio/configs/msmnile/sound_trigger_mixer_paths_wcd9340.xml:$(TARGET_COPY_OUT_VENDOR)/etc/sound_trigger_mixer_paths_wcd9340.xml \
-    hardware/qcom-caf/sm8150/audio/configs/msmnile/sound_trigger_mixer_paths_wcd9340_qrd.xml:$(TARGET_COPY_OUT_VENDOR)/etc/sound_trigger_mixer_paths_wcd9340_qrd.xml \
-    hardware/qcom-caf/sm8150/audio/configs/msmnile/sound_trigger_platform_info.xml:$(TARGET_COPY_OUT_VENDOR)/etc/sound_trigger_platform_info.xml \
-    hardware/qcom-caf/sm8150/audio/configs/msmnile/mixer_paths_pahu.xml:$(TARGET_COPY_OUT_VENDOR)/etc/mixer_paths_pahu.xml \
-    hardware/qcom-caf/sm8150/audio/configs/msmnile/sound_trigger_mixer_paths.xml:$(TARGET_COPY_OUT_VENDOR)/etc/sound_trigger_mixer_paths.xml \
-    hardware/qcom-caf/sm8150/audio/configs/msmnile/graphite_ipc_platform_info.xml:$(TARGET_COPY_OUT_VENDOR)/etc/graphite_ipc_platform_info.xml
+    $(LOCAL_PATH)/configs/audio/mixer_paths_tavil.xml:$(TARGET_COPY_OUT_VENDOR)/etc/mixer_paths_tavil.xml \
+    $(LOCAL_PATH)/configs/audio/bluetooth_hearing_aid_audio_policy_configuration.xml:/$(TARGET_COPY_OUT_VENDOR)/etc/bluetooth_hearing_aid_audio_policy_configuration.xml
 
 PRODUCT_COPY_FILES += \
     frameworks/av/services/audiopolicy/config/a2dp_in_audio_policy_configuration.xml:$(TARGET_COPY_OUT_VENDOR)/etc/a2dp_in_audio_policy_configuration.xml \
-    frameworks/av/services/audiopolicy/config/audio_policy_volumes.xml:$(TARGET_COPY_OUT_VENDOR)/etc/audio_policy_volumes.xml \
     frameworks/av/services/audiopolicy/config/default_volume_tables.xml:$(TARGET_COPY_OUT_VENDOR)/etc/default_volume_tables.xml \
     frameworks/av/services/audiopolicy/config/r_submix_audio_policy_configuration.xml:$(TARGET_COPY_OUT_VENDOR)/etc/r_submix_audio_policy_configuration.xml \
     frameworks/av/services/audiopolicy/config/usb_audio_policy_configuration.xml:$(TARGET_COPY_OUT_VENDOR)/etc/usb_audio_policy_configuration.xml
@@ -118,11 +105,8 @@ TARGET_SCREEN_WIDTH := 1080
 
 # Camera
 PRODUCT_PACKAGES += \
-    libdng_sdk.vendor
-
-PRODUCT_PACKAGES += \
-    libshim_megvii \
-    libmedia_jni_shim
+    libdng_sdk.vendor \
+    libshim_megvii
 
 PRODUCT_COPY_FILES += \
     frameworks/native/data/etc/android.hardware.camera.flash-autofocus.xml:$(TARGET_COPY_OUT_VENDOR)/etc/permissions/android.hardware.camera.flash-autofocus.xml \
@@ -196,6 +180,12 @@ PRODUCT_COPY_FILES += \
 PRODUCT_COPY_FILES += \
     $(LOCAL_PATH)/rootdir/etc/fstab.qcom:$(TARGET_COPY_OUT_VENDOR)/etc/fstab.qcom
 
+# F2FS
+PRODUCT_PACKAGES += \
+    sg_write_buffer \
+    f2fs_io \
+    check_f2fs
+
 # GPS
 PRODUCT_PACKAGES += \
     android.hardware.gnss@2.1-impl-qti \
@@ -212,6 +202,7 @@ PRODUCT_COPY_FILES += \
 
 # Handheld hardware
 PRODUCT_COPY_FILES += \
+    frameworks/native/data/etc/android.software.freeform_window_management.xml:$(TARGET_COPY_OUT_SYSTEM)/etc/permissions/android.software.freeform_window_management.xml \
     frameworks/native/data/etc/handheld_core_hardware.xml:$(TARGET_COPY_OUT_VENDOR)/etc/permissions/handheld_core_hardware.xml
 
 # Health
@@ -226,7 +217,7 @@ PRODUCT_PACKAGES += \
 
 # HotwordEnrollment
 PRODUCT_COPY_FILES += \
-    $(LOCAL_PATH)/configs/permissions/hotword-hiddenapi-package-whitelist.xml:$(TARGET_COPY_OUT_SYSTEM)/etc/sysconfig/hotword-hiddenapi-package-whitelist.xml \
+    $(LOCAL_PATH)/configs/permissions/hotword-hiddenapi-package-allowlist.xml:$(TARGET_COPY_OUT_SYSTEM)/etc/sysconfig/hotword-hiddenapi-package-allowlist.xml \
     $(LOCAL_PATH)/configs/permissions/privapp-permissions-hotword.xml:$(TARGET_COPY_OUT_PRODUCT)/etc/permissions/privapp-permissions-hotword.xml
 
 # Insmod files
@@ -257,7 +248,8 @@ PRODUCT_PACKAGES += \
 
 # Input
 PRODUCT_COPY_FILES += \
-    $(LOCAL_PATH)/configs/keylayout/gpio-keys.kl:$(TARGET_COPY_OUT_SYSTEM)/usr/keylayout/gpio-keys.kl
+    $(LOCAL_PATH)/configs/keylayout/gpio-keys.kl:$(TARGET_COPY_OUT_SYSTEM)/usr/keylayout/gpio-keys.kl \
+    $(LOCAL_PATH)/configs/keylayout/sm8150-tavil-snd-card_Button_Jack.kl:$(TARGET_COPY_OUT_SYSTEM)/usr/keylayout/sm8150-tavil-snd-card_Button_Jack.kl
 
 # IR
 PRODUCT_PACKAGES += \
@@ -274,6 +266,11 @@ PRODUCT_COPY_FILES += \
 # Lights
 PRODUCT_PACKAGES += \
     android.hardware.lights-service.cepheus
+
+# LiveDisplay
+PRODUCT_PACKAGES += \
+    vendor.lineage.livedisplay@2.0-service-sdm \
+    vendor.lineage.livedisplay@2.1-service.cepheus
 
 # Media
 PRODUCT_PACKAGES += \
@@ -315,7 +312,7 @@ PRODUCT_COPY_FILES += \
     hardware/qcom-caf/sm8150/media/conf_files/msmnile/mediacodec-seccomp.policy:$(TARGET_COPY_OUT_VENDOR)/etc/seccomp_policy/mediacodec.policy \
     hardware/qcom-caf/sm8150/media/conf_files/msmnile/system_properties.xml:$(TARGET_COPY_OUT_VENDOR)/etc/system_properties.xml
 
-    PRODUCT_COPY_FILES += \
+PRODUCT_COPY_FILES += \
     frameworks/av/media/libstagefright/data/media_codecs_google_audio.xml:$(TARGET_COPY_OUT_VENDOR)/etc/media_codecs_google_audio.xml \
     frameworks/av/media/libstagefright/data/media_codecs_google_telephony.xml:$(TARGET_COPY_OUT_VENDOR)/etc/media_codecs_google_telephony.xml \
     frameworks/av/media/libstagefright/data/media_codecs_google_video.xml:$(TARGET_COPY_OUT_VENDOR)/etc/media_codecs_google_video.xml
@@ -330,14 +327,17 @@ PRODUCT_COPY_FILES += \
 # NFC
 PRODUCT_PACKAGES += \
     android.hardware.nfc@1.2-service \
+    com.android.nfc_extras \
+    com.gsma.services.nfc \
     NfcNci \
+    SecureElement \
     Tag
 
 PRODUCT_PACKAGES += \
     com.android.nfc_extras
 
 PRODUCT_COPY_FILES += \
-    $(LOCAL_PATH)/configs/nfc/libnfc-nci.conf:$(TARGET_COPY_OUT_PRODUCT)/etc/libnfc-nci.conf \
+    $(LOCAL_PATH)/configs/nfc/libnfc-nci.conf:$(TARGET_COPY_OUT_SYSTEM)/etc/libnfc-nci.conf \
     $(LOCAL_PATH)/configs/nfc/libnfc-nxp.conf:$(TARGET_COPY_OUT_VENDOR)/etc/libnfc-nxp.conf
 
 PRODUCT_COPY_FILES += \
@@ -351,12 +351,11 @@ PRODUCT_COPY_FILES += \
 
 # Overlay
 DEVICE_PACKAGE_OVERLAYS += \
-    $(LOCAL_PATH)/overlay \
-    $(LOCAL_PATH)/overlay-pe
+    $(LOCAL_PATH)/overlay
 
 # Power
 PRODUCT_PACKAGES += \
-    android.hardware.power-service.xiaomi-libperfmgr \
+    android.hardware.power-service.cepheus-libperfmgr \
     android.hardware.power.stats@1.0-service.xiaomi
 
 PRODUCT_COPY_FILES += \
@@ -368,10 +367,6 @@ PRODUCT_CHARACTERISTICS := nosdcard
 # QTI
 PRODUCT_PACKAGES += \
     libqti_vndfwk_detect.vendor
-
-PRODUCT_COPY_FILES += \
-    $(LOCAL_PATH)/configs/permissions/qti_whitelist.xml:$(TARGET_COPY_OUT_SYSTEM)/etc/sysconfig/qti_whitelist.xml \
-    $(LOCAL_PATH)/configs/permissions/system_ext-privapp-permissions-qti.xml:$(TARGET_COPY_OUT_SYSTEM_EXT)/etc/permissions/privapp-permissions-qti.xml \
 
 # RCS
 PRODUCT_PACKAGES += \
@@ -416,6 +411,11 @@ PRODUCT_COPY_FILES += \
 PRODUCT_PACKAGES += \
     SmoothCutoutOverlay
 
+# SOC Properties - for S
+PRODUCT_VENDOR_PROPERTIES += \
+    ro.soc.manufacturer=Qualcomm \
+    ro.soc.model=SDM8150
+
 # Soong namespaces
 PRODUCT_SOONG_NAMESPACES += \
     $(LOCAL_PATH) \
@@ -443,7 +443,11 @@ PRODUCT_COPY_FILES += \
 
 # Thermal
 PRODUCT_PACKAGES += \
-    android.hardware.thermal@2.0-service.qti
+    android.hardware.thermal@2.0-service.cepheus \
+    thermal_logd
+
+PRODUCT_COPY_FILES += \
+    $(LOCAL_PATH)/configs/thermal/thermal_info_config.json:$(TARGET_COPY_OUT_VENDOR)/etc/thermal_info_config.json
 
 # Touchscreen
 PRODUCT_COPY_FILES += \
@@ -516,3 +520,13 @@ PRODUCT_PROPERTY_OVERRIDES += \
 # Mac Address Generator
 PRODUCT_PACKAGES += \
     wifi-mac-generator
+
+# ZRAM writeback
+PRODUCT_PROPERTY_OVERRIDES += \
+    ro.zram.mark_idle_delay_mins=60 \
+    ro.zram.first_wb_delay_mins=1440 \
+    ro.zram.periodic_wb_delay_hours=24
+
+# Use 64-bit dex2oat for better dexopt time.
+PRODUCT_PROPERTY_OVERRIDES += \
+    dalvik.vm.dex2oat64.enabled=true

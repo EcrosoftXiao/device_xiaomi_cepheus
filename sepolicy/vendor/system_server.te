@@ -2,4 +2,9 @@ get_prop(system_server, vendor_persist_camera_prop)
 get_prop(system_server, vendor_default_prop)
 get_prop(system_server, vendor_camera_prop)
 
+allow system_server app_zygote:process { getpgid };
 allow system_server vendor_proc_shs:dir search;
+allow system_server vendor_display_notch_prop:file { execute getattr map open read };
+allow system_server adb_data_file:file { getattr map open read };
+allow system_server init:binder call;
+allow system_server hal_memtrack_hwservice:hwservice_manager { find };

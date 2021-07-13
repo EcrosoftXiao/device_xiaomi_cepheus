@@ -8,3 +8,5 @@ allow { appdomain -isolated_app } public_adsprpcd_file:file r_file_perms;
 
 # Allow appdomain to get mlipay_prop
 get_prop({ appdomain -isolated_app }, mlipay_prop)
+get_prop({ appdomain -isolated_app }, vendor_payment_security_prop)
+get_prop({ appdomain -isolated_app }, vendor_fp_prop) 

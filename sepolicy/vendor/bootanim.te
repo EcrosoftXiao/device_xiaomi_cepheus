@@ -1,0 +1,3 @@
+# Bootanim should not be reading default vendor-defined properties.
+dontaudit bootanim vendor_default_prop:file read;
+allow bootanim vendor_file:file { execute getattr map open read };

@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <!--
-     Copyright (C) 2018 The LineageOS Project
+     Copyright (C) 2021 The LineageOS Project
 
      Licensed under the Apache License, Version 2.0 (the "License");
      you may not use this file except in compliance with the License.
@@ -39,6 +39,7 @@
         <item>@string/dirac_headset_in_ear2</item>
         <item>@string/dirac_headset_earphone_basic</item>
         <item>@string/dirac_headset_earphone</item>
+        <item>@string/dirac_preset_bass_booster</item>
     </string-array>
 
     <string-array name="dirac_headset_pref_values" translatable="false">
@@ -80,6 +81,7 @@
         <item>@string/dirac_preset_country</item>
         <item>@string/dirac_preset_dance</item>
         <item>@string/dirac_preset_metal</item>
+        <item>@string/dirac_preset_bass_booster</item>
     </string-array>
 
     <string-array name="dirac_preset_pref_values" translatable="false">
@@ -94,5 +96,19 @@
         <item>"0,0,-2,-2,2,2,0"</item>
         <item>"0,4,2,0,-2,-2,4"</item>
         <item>"2,0,0,-2,-4,0,0"</item>
+        <item>"10,8,-3,0,-3,5,5"</item>
+    </string-array>
+
+    <!-- Pickup gesture -->
+    <string-array name="pick_up_gesture_entries" translatable="false">
+        <item>@string/disabled</item>
+        <item>@string/pick_up_gesture_summary</item>
+        <item>@string/pick_up_wake_gesture_summary</item>
+    </string-array>
+
+    <string-array name="pick_up_gesture_values" translatable="false">
+        <item>0</item>
+        <item>1</item>
+        <item>2</item>
     </string-array>
 </resources>

@@ -17,19 +17,19 @@
 
 package org.lineageos.settings.doze;
 
+import static android.provider.Settings.Secure.DOZE_ALWAYS_ON;
+import static android.provider.Settings.Secure.DOZE_ENABLED;
+
 import android.content.Context;
 import android.content.Intent;
 import android.content.pm.PackageManager;
-import android.hardware.display.AmbientDisplayConfiguration;
 import android.hardware.Sensor;
 import android.hardware.SensorManager;
+import android.hardware.display.AmbientDisplayConfiguration;
 import android.os.UserHandle;
 import android.provider.Settings;
 import android.util.Log;
 import androidx.preference.PreferenceManager;
-
-import static android.provider.Settings.Secure.DOZE_ALWAYS_ON;
-import static android.provider.Settings.Secure.DOZE_ENABLED;
 
 public final class DozeUtils {
     private static final String TAG = "DozeUtils";
@@ -42,11 +42,9 @@ public final class DozeUtils {
     protected static final String CATEG_PICKUP_SENSOR = "pickup_sensor";
     protected static final String CATEG_PROX_SENSOR = "proximity_sensor";
 
-    protected static final String GESTURE_PICK_UP_KEY = "gesture_pick_up";
-    protected static final String GESTURE_RAISE_TO_WAKE_KEY = "gesture_raise_to_wake";
+    protected static final String GESTURE_PICK_UP_KEY = "gesture_pick_up_type";
     protected static final String GESTURE_HAND_WAVE_KEY = "gesture_hand_wave";
     protected static final String GESTURE_POCKET_KEY = "gesture_pocket";
-    protected static final String GESTURE_RAISE_TO_WAKE = "gesture_raise_to_wake";
 
     public static void startService(Context context) {
         if (DEBUG)
@@ -118,11 +116,13 @@ public final class DozeUtils {
     }
 
     protected static boolean isPickUpEnabled(Context context) {
-        return isGestureEnabled(context, GESTURE_PICK_UP_KEY);
+        return !PreferenceManager.getDefaultSharedPreferences(context)
+                .getString(GESTURE_PICK_UP_KEY, "0").equals("0");
     }
 
-    protected static boolean isRaiseToWakeEnabled(Context context) {
-        return isGestureEnabled(context, GESTURE_RAISE_TO_WAKE_KEY);
+    protected static boolean isPickUpSetToWake(Context context) {
+        return PreferenceManager.getDefaultSharedPreferences(context)
+                .getString(GESTURE_PICK_UP_KEY, "0").equals("2");
     }
 
     protected static boolean isHandwaveGestureEnabled(Context context) {

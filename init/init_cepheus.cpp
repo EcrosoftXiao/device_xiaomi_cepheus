@@ -75,11 +75,22 @@ void set_ro_product_prop(const std::string &prop, const std::string &value) {
 };
 
 void vendor_load_properties() {
-    set_ro_product_prop("device", "cepheus");
-    set_ro_product_prop("model", "MI 9");
-    set_ro_product_prop("name", "cepheus");
-    set_ro_build_prop("fingerprint", "Xiaomi/cepheus/cepheus:11/RKQ1.200826.002/21.3.10:user/release-keys");
+    std::string hardware_revision;
+    hardware_revision = GetProperty("ro.boot.hwversion", "UNKNOWN");
 
-    // description
-    property_override("ro.build.description", "cepheus-user 11 RKQ1.200826.002 21.3.10 release-keys");
+    std::string model;
+    std::string device;
+    std::string fingerprint;
+    std::string description;
+
+        model = "MI 9";
+        device = "cepheus";
+        fingerprint = "Xiaomi/cepheus/cepheus:11/RKQ1.200826.002/V12.5.1.0.RFAMIXM:user/release-keys";
+        description = "cepheus-user 11 RKQ1.200826.002 V12.5.1.0.RFAMIXM release-keys";
+
+    set_ro_build_prop("fingerprint", fingerprint);
+    set_ro_product_prop("device", device);
+    set_ro_product_prop("model", model);
+    property_override("ro.build.description", description.c_str());
+    property_override("ro.boot.hardware.revision", hardware_revision.c_str());
 }

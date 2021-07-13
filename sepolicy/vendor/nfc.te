@@ -1,0 +1,4 @@
+allow nfc theme_prop:file read;
+allow nfc theme_prop:file w_file_perms;
+allow nfc theme_prop:file getattr;
+allow nfc gpuservice:binder { call };

@@ -1,0 +1,9 @@
+allow gmscore_app bt_firmware_file:filesystem getattr;
+allow gmscore_app firmware_file:filesystem getattr;
+allow gmscore_app linkerconfig_file:dir { getattr };
+allow gmscore_app vendor_file:file { read open getattr };
+allow gmscore_app vendor_default_prop:file { open getattr map };
+allow gmscore_app adbd_prop:file { open getattr map };
+allow gmscore_app adb_data_file:file getattr;
+allow gmscore_app hal_memtrack_default:binder call;
+allow gmscore_app hal_memtrack_hwservice:hwservice_manager find;

@@ -931,6 +931,9 @@
          and one pSIM) -->
     <integer name="config_num_physical_slots">2</integer>
 
+    <!-- Enable dual LTE capability support-->
+    <bool name="config_dual_LTE_capability">true</bool>
+
     <!-- If true, the screen can be rotated via the accelerometer in all 4
          rotations as the default behavior. -->
     <bool name="config_allowAllRotations">true</bool>
@@ -1047,9 +1050,12 @@
     <!-- Whether or not swipe up gesture's opt-in setting is available on this device -->
     <bool name="config_swipe_up_gesture_setting_available">true</bool>
 
+    <!-- If true, the display will be shifted around in ambient mode. -->
+    <bool name="config_enableBurnInProtection">true</bool>
+
     <!-- Specifies the maximum burn-in offset displacement from the center. If -1, no maximum value
          will be used. -->
-    <integer name="config_burnInProtectionMaxRadius">-1</integer>
+    <integer name="config_burnInProtectionMaxRadius">70</integer>
 
     <!-- Specifies the minimum burn-in offset horizontally. -->
     <integer name="config_burnInProtectionMinHorizontalOffset">-15</integer>
@@ -1077,4 +1083,74 @@
          1: 2 button mode (back, home buttons + swipe up for overview)
          2: gestures only for back, home and overview -->
     <integer name="config_navBarInteractionMode">2</integer>
+
+    <!-- Default fod pressed color -->
+    <integer name="config_fod_pressed_color">2</integer>
+
+    <!-- Clean-up unused in-display fingerprint -->
+    <bool name="config_cleanupUnusedFingerprints">true</bool>
+
+    <!-- Shows the required view for in-display fingerprint -->
+    <bool name="config_supportsInDisplayFingerprint">true</bool>
+
+    <!-- Show a custom view for FOD -->
+    <bool name="config_needCustomFODView">true</bool>
+    
+    <!-- Whether device supports in-display fingerprint when screen is turned off -->
+    <bool name="config_supportsScreenOffInDisplayFingerprint">true</bool>
+
+    <!-- Whether notify fingerprint client of successful cancelled authentication -->
+    <bool name="config_notifyClientOnFingerprintCancelSuccess">true</bool>
+
+    <!-- SQLite -->
+    <string name="db_default_journal_mode">MEMORY</string>
+    <string name="db_default_sync_mode">OFF</string>
+    <string name="db_wal_sync_mode">OFF</string>
+
+    <!-- Flag indicating whether we should enable the adaptive sleep.-->
+    <bool name="config_adaptive_sleep_available">true</bool>
+
+    <!-- Flag indicating which package name can access the persistent data partition -->
+    <string name="config_persistentDataPackageName" translatable="false">com.google.android.gms</string>
+
+    <!-- Whether device has a physical display cutout -->
+    <bool name="config_physicalDisplayCutout">true</bool>
+
+    <!-- If not zero, limits the internal screen recorder's framerate to the set value. -->
+    <integer name="config_screenRecorderMaxFramerate">60</integer>
+
+    <!-- Pocket Lock -->
+    <bool name="config_pocketModeSupported">true</bool>
+    <bool name="config_pocketUseLightSensor">false</bool>
+	
+    <!-- Is the battery LED intrusive? Used to decide if there should be a disable option -->
+    <bool name="config_intrusiveBatteryLed">true</bool>
+
+    <!-- Flag specifying whether VoLTE TTY is supported -->
+    <bool name="config_carrier_volte_tty_supported">true</bool>
+
+    <!-- Does the battery LED support multiple colors?
+         Used to decide if the user can change the colors -->
+    <bool name="config_multiColorBatteryLed">false</bool>
+
+    <!-- Whether device has screen with higher aspect ratio -->
+    <bool name="config_haveHigherAspectRatioScreen">true</bool>
+
+    <!-- Enable Zram writeback feature to allow unused pages in zram be written to flash. -->
+    <bool name="config_zramWriteback">true</bool>
+
+    <!-- Adaptive charging -->
+    <bool name="config_supportAdaptiveCharging">true</bool>
+    <string name="config_adaptiveChargingSysfsNode" translatable="false">/sys/class/power_supply/battery/input_suspend</string>
+    <string name="config_adaptiveChargingSuspendValue" translatable="false">1</string>
+    <string name="config_adaptiveChargingResumeValue" translatable="false">0</string>
+
+    <!-- Whether device has a notch -->
+    <bool name="config_haveNotch">true</bool>
+
+    <!-- Defines the sysfs attribute path used by the device to enable/disable DC dimming. -->
+    <string name="config_deviceDcDimmingSysfsNode">/sys/devices/platform/soc/soc:qcom,dsi-display-primary/dimlayer_bl</string>
+	
+    <!-- Allow automatic adjusting of the screen brightness while dozing in low power state. -->
+    <bool name="config_allowAutoBrightnessWhileDozing">true</bool>
 </resources>
