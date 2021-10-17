@@ -22,17 +22,20 @@ $(call inherit-product, $(SRC_TARGET_DIR)/product/full_base_telephony.mk)
 $(call inherit-product, device/xiaomi/cepheus/device.mk)
 
 # Inherit some common PE stuff.
-$(call inherit-product, vendor/aosp/config/common_full_phone.mk)
+$(call inherit-product, vendor/arrow/config/common.mk)
 
 # Boot animation
 TARGET_BOOT_ANIMATION_RES := 1080
 
 # Device identifier
-PRODUCT_NAME := aosp_cepheus
+PRODUCT_NAME := arrow_cepheus
 PRODUCT_DEVICE := cepheus
 PRODUCT_BRAND := Xiaomi
 PRODUCT_MODEL := Mi 9
 PRODUCT_MANUFACTURER := Xiaomi
+
+DEVICE_MAINTAINER := Evasi0nXiao
+ARROW_GAPPS := true
 
 # Include firmware
 $(call inherit-product, vendor/xiaomi-firmware/cepheus/firmware.mk)
